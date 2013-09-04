@@ -19,14 +19,23 @@ module RiakAPI
 
     def get(bucket, key)
     end
+
     def put(bucket, key, value, headers = nil)
       # consult strategy
       # put to riak
+      uri = build_uri_for(bucket, key)
       # return response
+      {status: 204, message: {}}
     end
+
     def delete(bucket, key)
     end
+
     def post(bucket, key, value, headers = nil)
+    end
+
+    def build_uri_for(bucket, key)
+      URI.encode "http://#{@config[:host]}:#{@config[:http_port]}/buckets/#{bucket}/keys/#{key}"
     end
   end
 end
