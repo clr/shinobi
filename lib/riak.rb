@@ -1,3 +1,5 @@
+require 'faraday'
+
 module RiakAPI
   class Bucket
   end
@@ -14,18 +16,33 @@ module RiakAPI
     end
 
     class Response
+      attr_accessor :status, :body
       # status, key, value
+      def initialize(response)
+        @status = response[:status]
+        @body = response[:body]
+      end
     end
 
     def get(bucket, key)
     end
 
     def put(bucket, key, value, headers = nil)
-      # consult strategy
+      # consult concurrent strategy (poc)
+      # determine how valuable & realistic this abstraction will actually be
+
       # put to riak
       uri = build_uri_for(bucket, key)
+
+      header = { 'Content-Type' => 'application/json' }
+      header.merge(headers) unless headers.nil?
+
+      client = Faraday.new(url: uri, headers: header)
+
+      response = client.put '', value
+
       # return response
-      {status: 204, message: {}}
+      Response.new({status: response.status, body: response.body})
     end
 
     def delete(bucket, key)
