@@ -16,15 +16,21 @@ module RiakAPI
     end
 
     class Response
-      attr_accessor :status, :body
-      # status, key, value
+      attr_accessor :status, :key, :value
       def initialize(response)
         @status = response[:status]
-        @body = response[:body]
+        @key = response[:key]
+        @value = response[:value]
       end
     end
 
     def get(bucket, key)
+      uri = build_uri_for(bucket, key)
+      client = Faraday.new(url: uri)
+      response = client.get ''
+      required = {status: response.status, key: key}
+      required[:value] = response.body unless response.nil? || !status_ok?(response.status)
+      Response.new(required)
     end
 
     def put(bucket, key, value, headers = nil)
@@ -42,7 +48,7 @@ module RiakAPI
       response = client.put '', value
 
       # return response
-      Response.new({status: response.status, body: response.body})
+      Response.new({status: response.status, key: key, value: value})
     end
 
     def delete(bucket, key)
@@ -53,6 +59,10 @@ module RiakAPI
 
     def build_uri_for(bucket, key)
       URI.encode "http://#{@config[:host]}:#{@config[:http_port]}/buckets/#{bucket}/keys/#{key}"
+    end
+
+    def status_ok?(status)
+      status == 200 || status == 204
     end
   end
 end

@@ -24,20 +24,18 @@ describe "Rest Interface GETs" do
   end
 
   describe "unsuccessful GET method" do
-    before do
-      let(:response){ client.get('ninja', 'location') }
-    end
+    let(:response){ client.get('ninja', 'location') }
 
     it "can't find a ninja in the shadows" do
-      assert_equal 404, @response_0.status
+      assert_equal 404, response.status
     end
 
     it "knows we are looking for a hiding ninja" do
-      assert_equal 'location', @response_0.key
+      assert_equal 'location', response.key
     end
 
     it "can't find a location for hiding ninja" do
-      assert_equal nil, @response_0.value
+      assert_equal nil, response.value
     end
   end
 end
