@@ -1,9 +1,7 @@
 :development:
   :host: 127.0.0.1
-  :pb_port: 10017
-  :protocol: pbc
+  :http_port: 10018
 
 :test:
   :host: 127.0.0.1
-  :pb_port: 10017
-  :protocol: pbc
+  :http_port: 8098
