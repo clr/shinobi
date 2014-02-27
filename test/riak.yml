@@ -5,5 +5,4 @@
 
 :test:
   :host: 127.0.0.1
-  :pb_port: 10017
-  :protocol: pbc
+  :port: 10018
